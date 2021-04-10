@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Controller implements InitHelper {
@@ -31,27 +32,27 @@ public class Controller implements InitHelper {
         this.view = new View();
     }
 
-    private <T extends Wiretapping> List<T> generateList(Factory<T> factory, int amount) {
-        List<T> tList = new ArrayList<>();
+    private <T extends Wiretapping> List<T> generateObjectsOfCityList(Factory<T> factory, int amount) {
+        List<T> objectArrayList = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            tList.add(factory.get());
+            objectArrayList.add(factory.get());
         }
-        return tList;
+        return objectArrayList;
     }
 
     @Override
     public List<Bank> createBanks(int bankAmount) {
-        return generateList(new BankFactory(), bankAmount);
+        return generateObjectsOfCityList(new BankFactory(), bankAmount);
     }
 
     @Override
     public List<Worker> createWorkers(int workerAmount) {
-        return generateList(new WorkerFactory(), workerAmount);
+        return generateObjectsOfCityList(new WorkerFactory(), workerAmount);
     }
 
     @Override
     public List<Spender> createSpenders(int spenderAmount) {
-        return generateList(new SpenderFactory(), spenderAmount);
+        return generateObjectsOfCityList(new SpenderFactory(), spenderAmount);
     }
 
     @Override
@@ -89,20 +90,14 @@ public class Controller implements InitHelper {
         for (Wiretapping wiretapping : wiretappingList) {
             new Thread(workingThreadGroup, (Runnable) wiretapping, wiretapping.getName()).start();
         }
-
-        Thread mediaThread = new Thread(getMedia());
-        mediaThread.setDaemon(true);
-        mediaThread.start();
-
         try {
             Thread.sleep(workingTime);
-
-            mediaThread.interrupt();
             workingThreadGroup.interrupt();
 
             Thread[] workingThreads = new Thread[wiretappingList.size()];
             workingThreadGroup.enumerate(workingThreads);
-            for (Thread thread : workingThreads) {
+            List<Thread> workingThreadsList = Arrays.asList(workingThreads);
+            for (Thread thread : workingThreadsList) {
                 if (thread != null) {
                     thread.join();
                 }
@@ -112,6 +107,13 @@ public class Controller implements InitHelper {
         }
 
         view.printDayEndMessage(media);
+    }
+
+    public void startMedia() {
+        Thread mediaThread = new Thread(getMedia());
+        mediaThread.setDaemon(true);
+        mediaThread.start();
+        mediaThread.interrupt();
     }
 
     @Override

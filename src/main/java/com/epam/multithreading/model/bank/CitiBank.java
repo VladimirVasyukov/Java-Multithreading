@@ -3,9 +3,12 @@ package com.epam.multithreading.model.bank;
 import com.epam.multithreading.View;
 import com.epam.multithreading.model.clients.HelpDesk;
 import com.epam.multithreading.model.clients.OkDesk;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CitiBank implements Bank {
     private static final long BANK_WORKING_TIME = 1000L;
+    private static final Logger LOG = LogManager.getLogger(View.class);
     private final String name;
     private volatile int moneyAmount;
     private HelpDesk helpDesk;
@@ -42,6 +45,7 @@ public class CitiBank implements Bank {
             Thread.sleep(helpDesk.getLunchTime());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            LOG.error("Unexpected InterruptedException in goToLunch method!", e);
         }
     }
 

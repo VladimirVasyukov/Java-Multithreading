@@ -31,7 +31,7 @@ public final class OkDesk implements HelpDesk {
         return okDesk;
     }
 
-    private <T extends Wiretapping & Runnable> T generateRandom(List<T> tList) {
+    private <T extends Wiretapping && Runnable> T generateRandom(List<T> tList) {
         return tList.get(RANDOM.nextInt(tList.size()));
     }
 

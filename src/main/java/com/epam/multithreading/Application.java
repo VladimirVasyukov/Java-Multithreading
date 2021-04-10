@@ -28,6 +28,7 @@ public class Application {
         controller.initBankSystemData(bankAmount, workerAmount, spenderAmount);
         long workingDayTime = Long.parseLong(CONFIGURATION_PARAMETERS.getString(DAY_TIME_KEY));
         controller.startWorking(workingDayTime);
+        controller.startMedia();
     }
 
 }
