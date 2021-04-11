@@ -24,7 +24,7 @@ public final class OkDesk implements HelpDesk {
 
     }
 
-    public static OkDesk getInstance() {
+    public synchronized static OkDesk getInstance() {
         if (okDesk == null) {
             okDesk = new OkDesk();
         }
